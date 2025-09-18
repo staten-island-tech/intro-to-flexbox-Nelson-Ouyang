@@ -6,7 +6,18 @@ body, html {
 }
 
 body {
-    background-color: white;
+    background-color: white;  
+
+
+}
+
+img {
+  width: 50%;
+  height: 30%;
+  object-fit: cover;
+  border: 3px solid gray; /* Add this line */
+  align-self:flex-start ; /* Moves image to the top of its flex parent */
+  margin: 100px;
 }
 
 .card {
@@ -14,14 +25,12 @@ body {
   height: 40rem;
   margin: 5rem 5rem;
   border: 2px solid black;
-  min-width: 400px;
-  min-height: 300px;
-
+min-width: 600px;
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: space-around;
   box-shadow: 10px 10px 5px grey;
+
 }
 .container {
    
@@ -30,5 +39,16 @@ body {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    margin: 100px auto;
+    margin: 0px auto;
+    
+  flex-direction: row;
+}
+
+h1{
+    text-align: center;
+    font-size: 200%;
+    margin: auto;
+    color: black;
+    text-shadow: 2px 2px 4px grey;
+    align-self: flex-end;
 }
