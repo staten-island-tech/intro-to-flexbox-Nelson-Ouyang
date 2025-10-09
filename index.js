@@ -122,13 +122,32 @@ const glasses = [
   },
 ];
 
-function inject(glasses) {
-  DOMSelectors.display.insertAdjacentHTML(
+function inject(item) {
+  //query html where to inject cards
+  const container = document.querySelector(".container");
+  container.insertAdjacentHTML(
     "afterbegin",
     `<div class="card">
-      <img class="img" src="img/${image}"/>
-      <h1 class="name">${name}</h1>
-      <p class="price">$${price}</p>
+      <img class="img" src="img/${item.image}"/>
+      <h1 class="name">${item.name}</h1>
+      <p class="price">$${item.price}</p>
+      <btn class="button">Add to Cart</button>
     </div>`
   );
 }
+
+glasses.forEach((glass) => {
+  inject(glass);
+});
+
+// create and append a new paragraph element to the body
+
+/* const newP = document.createElement("p");
+newP.textContent = "This is a new paragraph!";
+document.body.appendChild(newP); */
+const cards = document.querySelectorAll(".card");
+cards.forEach((card, index) => {
+  card.addEventListener("click", () => {
+    console.log(glasses[index]);
+  });
+});
