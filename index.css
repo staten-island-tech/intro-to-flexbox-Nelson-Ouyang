@@ -75,6 +75,10 @@ img {
   border-radius: 12px;
 }
 
+.cart-container {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}
 
 
 .container {

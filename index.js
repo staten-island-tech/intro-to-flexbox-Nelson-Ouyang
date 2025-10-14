@@ -174,13 +174,6 @@ document.body.appendChild(newP); */
 let count = 0;
 const buttons = document.querySelectorAll(".btn");
 
-buttons.forEach((button) => {
-  button.addEventListener("click", (event) => {
-    updateCount();
-    addcart(event.target);
-  });
-});
-
 function updateCount() {
   count++;
   const countDisplay = document.querySelector("h5");
@@ -200,4 +193,28 @@ function addcart(button) {
   } else {
     console.error("Glass not found");
   }
+  const cartContainer = document.querySelector(".description");
+  cartContainer.textContent = `Desc: ${cart}`;
 }
+
+buttons.forEach((button) => {
+  button.addEventListener("click", (event) => {
+    updateCount();
+    addcart(event.target);
+  });
+});
+
+/* function inject(selecteditem) {
+  const container = document.querySelector(".cart-container");
+  container.insertAdjacentHTML(
+    "afterbegin",
+    `<div class="cart">
+      <p class="selecteddescription>"$${selecteditem.cart}<p/>
+
+    </div>`
+  );
+}
+function showcart() {
+  cart.forEach(() => inject(selecteditem));
+}
+ */
