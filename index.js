@@ -4,7 +4,7 @@ const DOMSelectors = {
   price: document.getElementById("price"),
   button: document.getElementById("button"),
 };
-
+const cards = document.querySelectorAll(".card");
 const glasses = [
   {
     id: 0,
@@ -194,15 +194,14 @@ function addcart(button) {
     console.error("Glass not found");
   }
   const cartContainer = document.querySelector(".description");
-  cartContainer.textContent = `Desc: ${cart}`;
+  const cartDescriptions = cart
+    .map(
+      /*new array of strings w/ . map */ (item) =>
+        `${item.name} - $${item.price}`
+    )
+    .join(", ");
+  cartContainer.textContent = `Desc: ${cartDescriptions}`;
 }
-
-buttons.forEach((button) => {
-  button.addEventListener("click", (event) => {
-    updateCount();
-    addcart(event.target);
-  });
-});
 
 /* function inject(selecteditem) {
   const container = document.querySelector(".cart-container");
@@ -218,3 +217,44 @@ function showcart() {
   cart.forEach(() => inject(selecteditem));
 }
  */
+
+function filterByColor() {
+  const selectedColor = colorDropdown.value;
+
+  //Filter glasses based on selected color
+  const filtered = selectedColor
+    ? glasses.filter((glass) => glass.color.includes(selectedColor))
+    : glasses;
+
+  // Clear current cards
+  const container = document.querySelector(".container");
+  container.innerHTML = "";
+
+  // Inject filtered cards
+  filtered.forEach((item) => {
+    container.insertAdjacentHTML(
+      "afterbegin",
+      `<div class="card">
+        <img class="img" src="img/${item.image}"/>
+        <h1 class="name">${item.name}</h1>
+        <p class="price">$${item.price}</p>
+        <button class="btn" data-id="${item.id}">Add to Cart</button>
+      </div>`
+    );
+  });
+
+  // Reattach button listeners cuz cleared
+  const newButtons = document.querySelectorAll(".btn");
+  newButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      updateCount();
+      addcart(event.target);
+    });
+  });
+}
+buttons.forEach((button) => {
+  button.addEventListener("click", (event) => {
+    updateCount();
+    addcart(event.target);
+  });
+});
