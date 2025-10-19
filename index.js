@@ -160,6 +160,21 @@ function inject(item) {
     </div>`
   );
 }
+function injectcart(button, )  {
+  const id = button.getAttribute("data-id");
+
+  //Find the corresponding glass object from the glasses array
+  const selectedGlass = glasses.find((glass) => glass.id === Number(id));
+  if (selectedGlass) {
+    NELSONREADTHISANDMAKECARTCONTAINER.insertAdjacentHTML(
+      "afterbegin",
+      `<div class="cart">
+        <p class="selecteddescription>"$${selectedGlass.name} - $${selectedGlass.price}<p/>
+      </div>`
+    );
+  }
+
+}
 
 glasses.forEach((glass) => {
   inject(glass);
@@ -218,40 +233,39 @@ function showcart() {
 }
  */
 
-function filterByColor() {
-  const selectedColor = colorDropdown.value;
+const colors = ["Silver", "Clear", "Gold", "Cyan", "Black", "Blue", "Purple", "Green", "Red", "Tortoise", "Yellow", "Ivory", "Brown", "Orange", "Grey"];
 
-  //Filter glasses based on selected color
-  const filtered = selectedColor
-    ? glasses.filter((glass) => glass.color.includes(selectedColor))
-    : glasses;
-
-  // Clear current cards
-  const container = document.querySelector(".container");
-  container.innerHTML = "";
-
-  // Inject filtered cards
-  filtered.forEach((item) => {
-    container.insertAdjacentHTML(
-      "afterbegin",
-      `<div class="card">
-        <img class="img" src="img/${item.image}"/>
-        <h1 class="name">${item.name}</h1>
-        <p class="price">$${item.price}</p>
-        <button class="btn" data-id="${item.id}">Add to Cart</button>
-      </div>`
+function colorOptions() {
+  const colorOptions = document.querySelector(".coloroptions");
+  
+  colors.forEach((color) => {
+    colorOptions.insertAdjacentHTML(
+      "beforeend", 
+      `<option value="${color}">${color}</option>`
     );
   });
+}
+colorOptions();
+function SortByColor() {
+  const colorSelect = document.querySelector(".coloroptions");
+  const container = document.querySelector(".container");
 
-  // Reattach button listeners cuz cleared
-  const newButtons = document.querySelectorAll(".btn");
-  newButtons.forEach((button) => {
-    button.addEventListener("click", (event) => {
-      updateCount();
-      addcart(event.target);
-    });
+  colorSelect.addEventListener("change", () => {
+    const selectedColor = colorSelect.value;
+
+    // clear existing cards
+    container.innerHTML = "";
+
+    //filter glasses where the color array includes the selected color INCLUDES ACCESSES ARRAY IN CONST GLASSES
+    glasses
+      .filter(glass => glass.color.includes(selectedColor))
+      .forEach(glass => inject(glass));
   });
 }
+
+SortByColor();
+
+
 buttons.forEach((button) => {
   button.addEventListener("click", (event) => {
     updateCount();
