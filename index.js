@@ -160,46 +160,34 @@ function inject(item) {
     </div>`
   );
 }
-function injectcart(button, )  {
-  const id = button.getAttribute("data-id");
 
-  //Find the corresponding glass object from the glasses array
-  const selectedGlass = glasses.find((glass) => glass.id === Number(id));
+function injectcart(button, id, selectedGlass) {
+  const cartContainer = document.querySelector(".cart-container");
   if (selectedGlass) {
-    NELSONREADTHISANDMAKECARTCONTAINER.insertAdjacentHTML(
+    cartContainer.insertAdjacentHTML(
       "afterbegin",
       `<div class="cart">
         <p class="selecteddescription>"$${selectedGlass.name} - $${selectedGlass.price}<p/>
       </div>`
     );
   }
-
 }
 
-glasses.forEach((glass) => {
-  inject(glass);
-});
-
-// create and append a new paragraph element to the body
-
-/* const newP = document.createElement("p");
-newP.textContent = "This is a new paragraph!";
-document.body.appendChild(newP); */
-
-let count = 0;
-const buttons = document.querySelectorAll(".btn");
+function displayAllCards() {
+  glasses.forEach((glass) => {
+    inject(glass);
+  });
+}
 
 function updateCount() {
   count++;
   const countDisplay = document.querySelector("h5");
   countDisplay.textContent = `Count: ${count}`;
 }
+
 const cart = [];
 function addcart(button) {
-  //Get the glass id from the button's data attribute
   const id = button.getAttribute("data-id");
-
-  //Find the corresponding glass object from the glasses array
   const selectedGlass = glasses.find((glass) => glass.id === Number(id));
 
   if (selectedGlass) {
@@ -208,67 +196,75 @@ function addcart(button) {
   } else {
     console.error("Glass not found");
   }
+
   const cartContainer = document.querySelector(".description");
   const cartDescriptions = cart
-    .map(
-      /*new array of strings w/ . map */ (item) =>
-        `${item.name} - $${item.price}`
-    )
+    .map((item) => `${item.name} - $${item.price}`)
     .join(", ");
-  cartContainer.textContent = `Desc: ${cartDescriptions}`;
+  cartContainer.textContent = `CARTTTT ${cartDescriptions}`;
 }
-
-/* function inject(selecteditem) {
-  const container = document.querySelector(".cart-container");
-  container.insertAdjacentHTML(
-    "afterbegin",
-    `<div class="cart">
-      <p class="selecteddescription>"$${selecteditem.cart}<p/>
-
-    </div>`
-  );
+function attachButtonListeners() {
+  const buttons = document.querySelectorAll(".btn");
+  buttons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      updateCount();
+      addcart(event.target);
+    });
+  });
 }
-function showcart() {
-  cart.forEach(() => inject(selecteditem));
-}
- */
-
-const colors = ["Silver", "Clear", "Gold", "Cyan", "Black", "Blue", "Purple", "Green", "Red", "Tortoise", "Yellow", "Ivory", "Brown", "Orange", "Grey"];
+const colors = [
+  "Silver",
+  "Clear",
+  "Gold",
+  "Cyan",
+  "Black",
+  "Blue",
+  "Purple",
+  "Green",
+  "Red",
+  "Tortoise",
+  "Yellow",
+  "Ivory",
+  "Brown",
+  "Orange",
+  "Grey",
+];
 
 function colorOptions() {
   const colorOptions = document.querySelector(".coloroptions");
-  
   colors.forEach((color) => {
     colorOptions.insertAdjacentHTML(
-      "beforeend", 
+      "beforeend",
       `<option value="${color}">${color}</option>`
     );
   });
 }
-colorOptions();
+
 function SortByColor() {
   const colorSelect = document.querySelector(".coloroptions");
   const container = document.querySelector(".container");
 
   colorSelect.addEventListener("change", () => {
-    const selectedColor = colorSelect.value;
-
-    // clear existing cards
+    const selectedColor = colorSelect.value; //selected color =change in dropdown election
     container.innerHTML = "";
 
-    //filter glasses where the color array includes the selected color INCLUDES ACCESSES ARRAY IN CONST GLASSES
+    if (selectedColor === "None") {
+      displayAllCards();
+      attachButtonListeners();
+      return;
+    }
+
     glasses
-      .filter(glass => glass.color.includes(selectedColor))
-      .forEach(glass => inject(glass));
+      .filter((glass) => glass.color.includes(selectedColor))
+      .forEach((glass) => inject(glass));
+
+    attachButtonListeners();
   });
 }
 
+displayAllCards();
+colorOptions();
 SortByColor();
+attachButtonListeners();
 
-
-buttons.forEach((button) => {
-  button.addEventListener("click", (event) => {
-    updateCount();
-    addcart(event.target);
-  });
-});
+let count = 0;
