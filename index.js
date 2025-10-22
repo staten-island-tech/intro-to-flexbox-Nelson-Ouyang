@@ -160,17 +160,21 @@ function inject(item) {
     </div>`
   );
 }
+function clearitem() {
+  const cartitem = document.querySelector(".selecteddescription");
 
-function injectcart(button, id, selectedGlass) {
+  cartitem.innerHTML = "";
+}
+function injectcart(selectedGlass) {
   const cartContainer = document.querySelector(".cart-container");
-  if (selectedGlass) {
-    cartContainer.insertAdjacentHTML(
-      "afterbegin",
-      `<div class="cart">
-        <p class="selecteddescription>"$${selectedGlass.name} - $${selectedGlass.price}<p/>
+  cartContainer.insertAdjacentHTML(
+    "beforeend",
+    `<div class="cart">
+        <p class="selecteddescription">$${selectedGlass.name} - $${selectedGlass.price}</p>
+        <button class="remove-btn" data-id="${selectedGlass.id}">Remove</button>
+
       </div>`
-    );
-  }
+  );
 }
 
 function displayAllCards() {
@@ -193,16 +197,12 @@ function addcart(button) {
   if (selectedGlass) {
     cart.push(selectedGlass);
     console.log(cart);
+    injectcart(selectedGlass); // only inject the new one
   } else {
     console.error("Glass not found");
   }
-
-  const cartContainer = document.querySelector(".description");
-  const cartDescriptions = cart
-    .map((item) => `${item.name} - $${item.price}`)
-    .join(", ");
-  cartContainer.textContent = `CARTTTT ${cartDescriptions}`;
 }
+
 function attachButtonListeners() {
   const buttons = document.querySelectorAll(".btn");
   buttons.forEach((button) => {
@@ -268,3 +268,4 @@ SortByColor();
 attachButtonListeners();
 
 let count = 0;
+let total = 0;
