@@ -131,6 +131,7 @@ const glasses = [
     image: "Vene GR5.avif",
     price: 250,
     color: ["Green", "Orange"],
+    counter: 0,
   },
   {
     id: 18,
@@ -160,11 +161,17 @@ function inject(item) {
     </div>`
   );
 }
-function clearitem() {
-  const cartitem = document.querySelector(".selecteddescription");
 
-  cartitem.innerHTML = "";
+function removeitem() {
+  const cartContainer = document.querySelector(".cart-container");
+
+  cartContainer.addEventListener("click", (event) => {
+    if (event.target.classList.contains("remove-btn")) {
+      event.target.parentElement.remove();
+    }
+  });
 }
+
 function injectcart(selectedGlass) {
   const cartContainer = document.querySelector(".cart-container");
   cartContainer.insertAdjacentHTML(
@@ -196,14 +203,16 @@ function addcart(button) {
 
   if (selectedGlass) {
     cart.push(selectedGlass);
+    injectcart(selectedGlass);
+    totalcost += selectedGlass.price;
+    document.querySelector("h6").textContent = `Total: $${totalcost}`;
     console.log(cart);
-    injectcart(selectedGlass); // only inject the new one
   } else {
     console.error("Glass not found");
   }
 }
 
-function attachButtonListeners() {
+function attachButtonListeners(selectedGlass) {
   const buttons = document.querySelectorAll(".btn");
   buttons.forEach((button) => {
     button.addEventListener("click", (event) => {
@@ -251,7 +260,6 @@ function SortByColor() {
     if (selectedColor === "None") {
       displayAllCards();
       attachButtonListeners();
-      return;
     }
 
     glasses
@@ -266,6 +274,7 @@ displayAllCards();
 colorOptions();
 SortByColor();
 attachButtonListeners();
+removeitem();
 
 let count = 0;
-let total = 0;
+let totalcost = 0;
