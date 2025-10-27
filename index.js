@@ -165,9 +165,25 @@ function inject(item) {
 function removeitem() {
   const cartContainer = document.querySelector(".cart-container");
 
-  cartContainer.addEventListener("click", (event) => {
+  cartContainer.addEventListener("click", function (event) {
     if (event.target.classList.contains("remove-btn")) {
-      event.target.parentElement.remove();
+      // in the case of a click and this event targets the remove function (we want it to beecause ykwim)
+      const id = Number(event.target.getAttribute("data-id"));
+      const selectedGlass = glasses.find((glass) => glass.id === id);
+      const cartItem = event.target.closest(".cart");
+      //up top 3 lines: getting the id of the clicked remove button, finding the glass object with that id, and locating the cart item element to be removed or updated
+
+      const quantityElement = cartItem.querySelector(".quantity"); //finding the quantity element within the cart item to work with it
+      let quantity = Number(quantityElement.textContent); //so here we get the current quantity as a number
+      if (quantity > 1) {
+        quantity -= 1;
+        quantityElement.textContent = quantity;
+      } else {
+        cartItem.remove();
+      }
+
+      totalcost -= selectedGlass.price;
+      document.querySelector("h6").textContent = `Total: $${totalcost}`;
     }
   });
 }
@@ -177,10 +193,12 @@ function injectcart(selectedGlass) {
   cartContainer.insertAdjacentHTML(
     "beforeend",
     `<div class="cart">
-        <p class="selecteddescription">$${selectedGlass.name} - $${selectedGlass.price}</p>
+      <p class="selecteddescription">$${selectedGlass.name} - $${selectedGlass.price}</p>
+      <div class="cart-controls">
         <button class="remove-btn" data-id="${selectedGlass.id}">Remove</button>
-
-      </div>`
+        <p class="quantity">1</p>
+      </div>
+    </div>`
   );
 }
 
@@ -197,22 +215,32 @@ function updateCount() {
 }
 
 const cart = [];
-function addcart(button) {
-  const id = button.getAttribute("data-id");
-  const selectedGlass = glasses.find((glass) => glass.id === Number(id));
 
-  if (selectedGlass) {
-    cart.push(selectedGlass);
-    injectcart(selectedGlass);
-    totalcost += selectedGlass.price;
-    document.querySelector("h6").textContent = `Total: $${totalcost}`;
-    console.log(cart);
+function addcart(button) {
+  const id = Number(button.getAttribute("data-id"));
+  const selectedGlass = glasses.find((glass) => glass.id === id);
+  const existingCartItem = document.querySelector(
+    `.cart .remove-btn[data-id="${id}"]`
+  );
+
+  if (existingCartItem) {
+    //exsist
+    const quantityElement =
+      existingCartItem.parentElement.querySelector(".quantity");
+    let quantity = Number(quantityElement.textContent);
+    quantity += 1;
+    quantityElement.textContent = quantity;
   } else {
-    console.error("Glass not found");
+    //saying: no exsist because .remove-btn with that id not found
+    injectcart(selectedGlass);
   }
+
+  cart.push(selectedGlass);
+  totalcost += selectedGlass.price;
+  document.querySelector("h6").textContent = `Total: $${totalcost}`;
 }
 
-function attachButtonListeners(selectedGlass) {
+function attachButtonListeners() {
   const buttons = document.querySelectorAll(".btn");
   buttons.forEach((button) => {
     button.addEventListener("click", (event) => {
