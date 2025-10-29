@@ -220,7 +220,7 @@ function addcart(button) {
   const id = Number(button.getAttribute("data-id"));
   const selectedGlass = glasses.find((glass) => glass.id === id);
   const existingCartItem = document.querySelector(
-    `.cart .remove-btn[data-id="${id}"]`
+    `.cart .remove-btn[data-id="${id}"]` //Look inside the cart for a specific product by its data, syntax ig
   );
 
   if (existingCartItem) {
@@ -236,6 +236,7 @@ function addcart(button) {
   }
 
   cart.push(selectedGlass);
+  console.log(cart);
   totalcost += selectedGlass.price;
   document.querySelector("h6").textContent = `Total: $${totalcost}`;
 }
@@ -250,6 +251,7 @@ function attachButtonListeners() {
   });
 }
 const colors = [
+  "None",
   "Silver",
   "Clear",
   "Gold",
@@ -288,6 +290,7 @@ function SortByColor() {
     if (selectedColor === "None") {
       displayAllCards();
       attachButtonListeners();
+      return; // Exit the function early, other wise would run the bottom if "None" is selected
     }
 
     glasses
